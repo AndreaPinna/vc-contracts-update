@@ -1,6 +1,5 @@
 //SPDX-License-Identifier: UNLICENSED
-
-pragma solidity >=0.6.0 <0.7.0;
+pragma solidity >=0.8.2 <0.9.0;
 
 import "./CredentialRegistry.sol";
 
@@ -26,7 +25,8 @@ contract AbstractClaimsVerifier {
         string memory version,
         uint256 chainId,
         address verifyingContract,
-        address _registryAddress) public {
+        address _registryAddress) 
+        {
         DOMAIN_SEPARATOR = hashEIP712Domain(
             EIP712Domain({
         name : name,
@@ -60,7 +60,7 @@ contract AbstractClaimsVerifier {
         return (validFrom <= block.timestamp) && (block.timestamp < validTo);
     }
 
-    function _verifySigners(bytes32 _digest, address _issuer) internal view returns (uint8){
+    function _verifySigners(bytes32 _digest, address _issuer) internal view returns (uint256){
         return registry.getSigners(_digest, _issuer);
     }
 

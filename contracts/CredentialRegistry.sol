@@ -1,9 +1,10 @@
-//SPDX-License-Identifier: UNLICENSED
+//SPDX-License-Identifier: MIT
 
-pragma solidity >=0.6.0 <0.7.0;
-pragma experimental ABIEncoderV2;
+pragma solidity >=0.8.2 <0.9.0;
+//pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
+
 import "./ICredentialRegistry.sol";
 
 contract CredentialRegistry is ICredentialRegistry, AccessControl {
@@ -11,11 +12,20 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
 
     mapping(bytes32 => mapping(address => CredentialMetadata)) public credentials;
 
-    constructor() public {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    constructor() {
+        //_setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
-    function registerCredential(address issuer, address _subject, bytes32 _credentialHash, uint256 _from, uint256 _exp, bytes calldata signature) external override onlyIssuer returns (bool) {
+    function registerCredential(
+        address issuer, 
+        address _subject, 
+        bytes32 _credentialHash, 
+        uint256 _from, 
+        uint256 _exp, 
+        bytes calldata signature) 
+        external override onlyIssuer returns (bool) {
+
         CredentialMetadata storage credential = credentials[_credentialHash][issuer];
         require(credential.subject == address(0), "Credential already exists");
         credential.issuer = issuer;
@@ -24,6 +34,8 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
         credential.validTo = _exp;
         credential.status = true;
         credentials[_credentialHash][issuer] = credential;
+        bool res = _registerSignature(_credentialHash,issuer,signature) ;
+        require (res, "Imposible to complete the signature");
         emit CredentialRegistered(_credentialHash, issuer, _subject, credential.validFrom);
         return true;
     }
@@ -44,7 +56,7 @@ contract CredentialRegistry is ICredentialRegistry, AccessControl {
         return true;
     }
 
-    function exist(bytes32 _credentialHash, address issuer) override external view returns (bool exist){
+    function exist(bytes32 _credentialHash, address issuer) override external view returns (bool exists){
         CredentialMetadata memory credential = credentials[_credentialHash][issuer];
         return (credential.subject != address(0));
     }

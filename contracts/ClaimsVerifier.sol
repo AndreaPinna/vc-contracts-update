@@ -1,14 +1,15 @@
 //SPDX-License-Identifier: UNLICENSED
 
-pragma solidity >=0.6.0 <0.7.0;
-pragma experimental ABIEncoderV2;
+pragma solidity >=0.8.0 <0.9.0;
+//pragma experimental ABIEncoderV2;
 
+import "./lib/AccessControlEnumerable.sol";
 import "./lib/ECDSA.sol";
-import "@openzeppelin/contracts/access/AccessControl.sol";
+
 import "./AbstractClaimsVerifier.sol";
 import "./ClaimTypes.sol";
 
-contract ClaimsVerifier is AbstractClaimsVerifier, ClaimTypes, AccessControl {
+contract ClaimsVerifier is AbstractClaimsVerifier, ClaimTypes, AccessControlEnumerable {
 
     using ECDSA for bytes32;
 
@@ -22,8 +23,8 @@ contract ClaimsVerifier is AbstractClaimsVerifier, ClaimTypes, AccessControl {
         648529,
         address(this),
         _registryAddress
-    ) public {
-        _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+    ) {
+        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
     }
 
     function verifyCredential(VerifiableCredential memory vc, uint8 v, bytes32 r, bytes32 s) public view returns (bool, bool, bool, bool, bool) {
@@ -34,7 +35,12 @@ contract ClaimsVerifier is AbstractClaimsVerifier, ClaimTypes, AccessControl {
                 hashVerifiableCredential(vc)
             )
         );
-        return (_exist(digest, vc.issuer), _verifyRevoked(digest, vc.issuer), _verifyIssuer(digest, vc.issuer, v, r, s), (_verifySigners(digest, vc.issuer) == getRoleMemberCount(keccak256("SIGNER_ROLE"))), _validPeriod(vc.validFrom, vc.validTo));
+        return (
+            _exist(digest, vc.issuer), 
+            _verifyRevoked(digest, vc.issuer), 
+            _verifyIssuer(digest, vc.issuer, v, r, s), 
+            (_verifySigners(digest, vc.issuer) == getRoleMemberCount(SIGNER_ROLE)), 
+            _validPeriod(vc.validFrom, vc.validTo));
     }
 
     function verifySigner(VerifiableCredential memory vc, bytes calldata _signature) public view returns (bool){

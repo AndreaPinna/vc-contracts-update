@@ -1,7 +1,7 @@
 //SPDX-License-Identifier: UNLICENSED
 
-pragma solidity >=0.6.0 <0.7.0;
-pragma experimental ABIEncoderV2;
+pragma solidity >=0.8.2 <0.9.0;
+//pragma experimental ABIEncoderV2;
 
 contract ClaimTypes {
 

@@ -1,0 +1,45 @@
+{
+	"compiler": {
+		"version": "0.8.21+commit.d9974bed"
+	},
+	"language": "Solidity",
+	"output": {
+		"abi": [],
+		"devdoc": {
+			"kind": "dev",
+			"methods": {},
+			"version": 1
+		},
+		"userdoc": {
+			"kind": "user",
+			"methods": {},
+			"version": 1
+		}
+	},
+	"settings": {
+		"compilationTarget": {
+			"contracts/VC/ClaimTypes.sol": "ClaimTypes"
+		},
+		"evmVersion": "shanghai",
+		"libraries": {},
+		"metadata": {
+			"bytecodeHash": "ipfs"
+		},
+		"optimizer": {
+			"enabled": false,
+			"runs": 200
+		},
+		"remappings": []
+	},
+	"sources": {
+		"contracts/VC/ClaimTypes.sol": {
+			"keccak256": "0x5427551b51dfb12ad3b6638de8e0ce0e9195b19f904be3f5017665018f77f4c8",
+			"license": "UNLICENSED",
+			"urls": [
+				"bzz-raw://a3ada36ff6059fafec07710221b4d8bb0fc6b461fab50f24a68759ad07a34fc2",
+				"dweb:/ipfs/QmWG9rHaXhcKTi2b2u8Ex5yLHgBEqdDKZxU7sbX7rXAxja"
+			]
+		}
+	},
+	"version": 1
+}
